@@ -25,4 +25,12 @@ jobs:
            echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
            sudo apt-get update
            sudo apt-get install trivy -y
-           trivy fs .      
+           trivy fs .
+      - name: Docker build and push
+        run: 
+          docker build --build-arg TMDB_V3_API_KEY=9f1677dd935a400624e974bfc1f67223 -t netflix .
+          docker tag netflix venkyroyal/netflix:latest
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker push venkyroyal/netflix:latest
+        env:
+          DOCKER_CLI_ACI: 1     
