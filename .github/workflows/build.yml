@@ -19,13 +19,12 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       - name: install trivy
         run: |
-           sudo apt-get install wget apt-transport-https gnupg lsb-release -y
+           sudo apt-get install wget apt-transport-https gnupg lsb-release
            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
-           echo "deb &#91;signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+           echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
            sudo apt-get update
-           sudo apt-get install trivy -y
-           #scanning files
-           trivy fs .
+           sudo apt-get install trivy
+
       - name: Docker build and push
         run: |
           docker build --build-arg 466bd55e8be4f41772ccdd2d768fa69c -t netflix .
