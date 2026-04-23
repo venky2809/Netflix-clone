@@ -19,4 +19,13 @@ jobs:
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
           trivy fs .
+      - name: Docker build and push
+        run: |
+          docker build --build-arg TMDB_V3_API_KEY=b51b53fbd6ec10e0396a564f99f088e6 -t netflix .
+          docker tag netflix sevenajay/netflix:latest
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker push sevenajay/netflix:latest
+        env:
+          DOCKER_CLI_ACI: 1
+     
     
